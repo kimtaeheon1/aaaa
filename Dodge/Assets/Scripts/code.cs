@@ -7,7 +7,15 @@ public class Spawner : MonoBehaviour
     public GameObject characterPrefab;  // 총을 쏘는 캐릭터 프리팹
     public int maxCharacters = 5;       // 최대 캐릭터 수
     private List<GameObject> characters = new List<GameObject>();  // 스폰된 캐릭터 목록
-    private float[] spawnTimes = { 0f, 15f, 30f, 60f, 120f };        // 스폰 시간 배열
+    private float[] spawnTimes = { 0f, 15f, 30f, 45f, 60f};        // 스폰 시간 배열
+
+    private Vector3[] spawnPositions = new Vector3[]
+    {
+        new Vector3(20f, 0.55f, 1f),
+        new Vector3(-20f, 0.55f, 1f),
+        new Vector3(0f, 0.55f, -20f),
+        new Vector3(0f, 0.55f, 20f)
+    };
 
     void Start()
     {
@@ -20,10 +28,9 @@ public class Spawner : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnTimes[i] - (i > 0 ? spawnTimes[i - 1] : 0));
 
-            if (characters.Count < maxCharacters)
+            if (characters.Count < maxCharacters && i < spawnPositions.Length)
             {
-                Vector3 randomPosition = new Vector3(Random.Range(-20f, 20f), 1f, Random.Range(-20f, 20f));
-                GameObject newCharacter = Instantiate(characterPrefab, randomPosition, Quaternion.identity);
+                GameObject newCharacter = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity);
                 characters.Add(newCharacter);
             }
         }
